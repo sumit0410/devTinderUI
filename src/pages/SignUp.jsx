@@ -1,21 +1,17 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
-import { addUser } from "../utils/userSlice";
-import { BASE_URL } from "../utils/constants";
-import toast from "react-hot-toast";
 
-const Login = () => {
+const SignUp = () => {
   const navigate = useNavigate();
   const user = useSelector((store) => store.user);
   if (user) {
     navigate("/");
   }
-  const dispatch = useDispatch();
   const [formData, setFormData] = React.useState({
-    email: "sumit@gmail.com",
-    password: "Sumit@123",
+    name: "",
+    email: "",
+    password: "",
   });
 
   const handleSubmit = (e) => {
@@ -26,32 +22,40 @@ const Login = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
-  const handleLogin = async () => {
-    try {
-      const res = await axios.post(BASE_URL + "/login", formData, {
-        withCredentials: true,
-      });
-      dispatch(addUser(res.data.user));
-      // console.log(res.data.user);
-      toast.success(res.data.msg, {
-        position: "bottom-center",
-      });
-      navigate("/");
-    } catch (error) {
-      console.log("Error : " + error);
-    }
-  };
-
   return (
     <form
       onSubmit={handleSubmit}
       className="sm:w-87.5 w-full text-center bg-base-300 my-10 mx-auto border border-gray-800 rounded-2xl px-8"
     >
-      <h1 className="text-white text-3xl mt-10 font-medium">Login</h1>
-
+      <h1 className="text-white text-3xl mt-10 font-medium">Sign Up</h1>
       <p className="text-gray-400 text-sm mt-2">Please sign in to continue</p>
-
+      <div className="flex items-center mt-6 w-full bg-gray-800 border border-gray-700 h-12 rounded-full overflow-hidden pl-6 gap-2 ">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          className="text-gray-400"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          {" "}
+          <circle cx="12" cy="8" r="5" />{" "}
+          <path d="M20 21a8 8 0 0 0-16 0" />{" "}
+        </svg>
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          className="w-full bg-transparent text-white placeholder-gray-400 border-none outline-none "
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+      </div>
       <div className="flex items-center w-full mt-4 bg-gray-800 border border-gray-700 h-12 rounded-full overflow-hidden pl-6 gap-2 ">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -79,7 +83,6 @@ const Login = () => {
           required
         />
       </div>
-
       <div className=" flex items-center mt-4 w-full bg-gray-800 border border-gray-700 h-12 rounded-full overflow-hidden pl-6 gap-2 ">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -107,29 +110,25 @@ const Login = () => {
           required
         />
       </div>
-
       <div className="mt-4 text-left">
         <button className="text-sm text-indigo-400 hover:underline">
           Forget password?
         </button>
       </div>
-
       <button
         type="submit"
         className="mt-2 w-full h-11 rounded-full text-white bg-indigo-600 hover:bg-indigo-500 transition "
-        onClick={handleLogin}
       >
-        Login
+        Sign Up
       </button>
-
       <p className="text-gray-400 text-sm mt-3 mb-11 cursor-pointer">
-        Don't have an account?
+        Already have an account?
         <span className="text-indigo-400 hover:underline ml-1">
-          <Link to="/signup">click here</Link>
+          <Link to="/login">click here</Link>
         </span>
       </p>
     </form>
   );
 };
 
-export default Login;
+export default SignUp;
