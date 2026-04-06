@@ -5,9 +5,11 @@ import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const EditProfile = ({ user }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { firstName, lastName, age, about, gender, photoUrl } = user;
   const [formData, setFormData] = useState({
     firstName: firstName,
@@ -34,6 +36,7 @@ const EditProfile = ({ user }) => {
       console.log(res.data);
       toast.success(res.data.msg);
       dispatch(addUser(res?.data?.data));
+      navigate("/");
     } catch (error) {
       console.log("error: " + error.message);
     }

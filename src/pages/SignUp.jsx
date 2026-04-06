@@ -1,15 +1,18 @@
+import axios from "axios";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utils/constants";
+import { addUser } from "../utils/userSlice";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const user = useSelector((store) => store.user);
-  if (user) {
-    navigate("/");
-  }
+  const dispatch = useDispatch();
+  // const user = useSelector((store) => store.user);
+
   const [formData, setFormData] = React.useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
   });
@@ -22,13 +25,28 @@ const SignUp = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  const handleSignUp = async () => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/signup",
+        { ...formData },
+        { withCredentials: true },
+      );
+      // console.log(res.data.data);
+      dispatch(addUser(res?.data?.data));
+      return navigate("/profile");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <form
       onSubmit={handleSubmit}
       className="sm:w-87.5 w-full text-center bg-base-300 my-10 mx-auto border border-gray-800 rounded-2xl px-8"
     >
       <h1 className="text-white text-3xl mt-10 font-medium">Sign Up</h1>
-      <p className="text-gray-400 text-sm mt-2">Please sign in to continue</p>
+      <p className="text-gray-400 text-sm mt-2">Please sign up to continue</p>
       <div className="flex items-center mt-6 w-full bg-gray-800 border border-gray-700 h-12 rounded-full overflow-hidden pl-6 gap-2 ">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -48,10 +66,37 @@ const SignUp = () => {
         </svg>
         <input
           type="text"
-          name="name"
-          placeholder="Name"
+          name="firstName"
+          placeholder="First Name"
           className="w-full bg-transparent text-white placeholder-gray-400 border-none outline-none "
-          value={formData.name}
+          value={formData.firstName}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className="flex items-center mt-6 w-full bg-gray-800 border border-gray-700 h-12 rounded-full overflow-hidden pl-6 gap-2 ">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          className="text-gray-400"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          {" "}
+          <circle cx="12" cy="8" r="5" />{" "}
+          <path d="M20 21a8 8 0 0 0-16 0" />{" "}
+        </svg>
+        <input
+          type="text"
+          name="lastName"
+          placeholder="Last Name"
+          className="w-full bg-transparent text-white placeholder-gray-400 border-none outline-none "
+          value={formData.lastName}
           onChange={handleChange}
           required
         />
@@ -76,7 +121,7 @@ const SignUp = () => {
         <input
           type="email"
           name="email"
-          placeholder="Email id"
+          placeholder="Email "
           className="w-full bg-transparent text-white placeholder-gray-400 border-none outline-none "
           value={formData.email}
           onChange={handleChange}
@@ -118,6 +163,7 @@ const SignUp = () => {
       <button
         type="submit"
         className="mt-2 w-full h-11 rounded-full text-white bg-indigo-600 hover:bg-indigo-500 transition "
+        onClick={handleSignUp}
       >
         Sign Up
       </button>
