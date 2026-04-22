@@ -22,7 +22,7 @@ const UserCard = ({ user }) => {
   };
   return (
     user && (
-      <div className="card bg-base-300 w-96 shadow-sm">
+      <div className="card flex mx-auto my-20 bg-base-300 w-96 shadow-sm">
         <figure>
           <img src={photoUrl} alt="user photo" />
         </figure>

@@ -9,6 +9,7 @@ import Feed from "./pages/Feed";
 import { Toaster } from "react-hot-toast";
 import Connections from "./pages/Connections";
 import Requests from "./pages/Requests";
+import Chat from "./pages/Chat";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               <Route path="/connections" element={<Connections />} />
               <Route path="/requests" element={<Requests />} />
               <Route path="/signup" element={<SignUp />} />
+              <Route path="/chat/:targetUserId" element={<Chat />} />
             </Route>
           </Routes>
           <Toaster />

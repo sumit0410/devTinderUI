@@ -122,13 +122,6 @@ const EditProfile = ({ user }) => {
             <option value="others">Others</option>
           </select>
         </div>
-        {/* <p className="text-red-500 text-left my-1">{error}</p> */}
-
-        {/* <div className="mt-4 text-left">
-        <button className="text-sm text-indigo-400 hover:underline">
-          Forget password?
-        </button>
-      </div> */}
         <button
           type="submit"
           className="mt-4 w-full h-11 rounded-full text-white bg-indigo-600 hover:bg-indigo-500 transition "
