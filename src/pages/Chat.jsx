@@ -2,15 +2,16 @@ import React, { useEffect, useState } from "react";
 import { createSocketConnection } from "../utils/socket";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import axios from "../utils/axiosInstance";
 import { BASE_URL } from "../utils/constants";
+import { Button } from "@/components/ui/button";
 
-const Chat = () => {
+const Chat = ({ targetUserId, targetUser }) => {
   const user = useSelector((store) => store.user);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [targetUser, setTargetUser] = useState(null);
-  const { targetUserId } = useParams();
+  // const [targetUser, setTargetUser] = useState(null);
+  // const { targetUserId } = useParams();
   const loggedInUserId = user?._id;
 
   const formatMessageTime = (timestamp) => {
@@ -124,23 +125,12 @@ const Chat = () => {
   };
 
   return (
-    <div className="flex max-w-xl mx-auto my-10 flex-col h-162 bg-base-300">
-      {/* Header */}
-      <div className="bg-base-200 shadow p-4 text-lg font-semibold">
-        {targetUser && (
-          <div className="flex items-center gap-2">
-            <img
-              src={targetUser.photoUrl}
-              className="h-10 w-10 rounded-full"
-              alt="userPhoto"
-            />
-            <p> {targetUser?.firstName + " " + targetUser?.lastName}</p>
-          </div>
-        )}
-      </div>
-
+    <div>
       {/* Messages */}
-      <div id="chat-container" className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div
+        id="chat-container"
+        className="flex-1 h-82 pb-1 md:h-92 overflow-y-auto space-y-4"
+      >
         {messages.length === 0 ? (
           <div className="flex justify-center text-center text-gray-500 h-full items-center my-auto">
             <p>
@@ -186,21 +176,36 @@ const Chat = () => {
       </div>
 
       {/* Input */}
-      <div className="bg-base-200 p-3 flex items-center gap-2">
+      <div className=" relative pt-3 flex items-center gap-2">
         <input
           type="text"
           placeholder="Type a message..."
-          className="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="flex-1 w-full border rounded-full px-4 py-2 focus:outline-none "
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
-        <button
+        <Button
           onClick={sendMessage}
-          className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition"
+          variant="outline"
+          className=" px-4 border-none right-1 absolute py-4 rounded-full"
         >
-          Send
-        </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-send-icon lucide-send"
+          >
+            <path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
+            <path d="m21.854 2.147-10.94 10.939" />
+          </svg>
+        </Button>
       </div>
     </div>
   );

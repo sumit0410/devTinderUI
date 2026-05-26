@@ -1,9 +1,13 @@
-import axios from "axios";
+import axios from "../utils/axiosInstance";
 import React, { useEffect } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addRequest, removeRequest } from "../utils/requestsSlice";
 import toast from "react-hot-toast";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Link } from "react-router-dom";
 
 const Requests = () => {
   const requests = useSelector((store) => store.requests);
@@ -37,6 +41,12 @@ const Requests = () => {
     }
   };
 
+  const truncateAbout = (text, maxLength) => {
+    if (text.length <= maxLength) return text;
+
+    return text.slice(0, maxLength) + "...";
+  };
+
   useEffect(() => {
     getRequests();
   }, []);
@@ -44,52 +54,91 @@ const Requests = () => {
   if (!requests) return;
   return (
     requests && (
-      <div>
-        <h1 className="text-center my-6 text-2xl font-bold">Requests</h1>
-        <div className="mx-auto">
-          {requests.length === 0 ? (
-            <p className="text-center">No pending request</p>
-          ) : (
-            requests.map((request) => {
-              const { firstName, lastName, age, photoUrl, gender, about } =
-                request.fromUserId;
+      <div className="max-w-6xl mx-auto p-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-lg sm:text-base md:text-2xl font-bold">
+              Pending Requests
+            </h1>
 
-              return (
-                <div
-                  className="flex justify-between items-center mx-5 sm:mx-auto bg-base-300 rounded-full border border-gray-800 sm:max-w-1/2 p-4 m-2"
-                  key={request._id}
-                >
-                  <div className="flex">
-                    <img
-                      className="rounded-full w-14 h-14"
-                      src={photoUrl}
-                      alt="user photo"
-                    />
-                    <div className="text-sm mx-5">
-                      <div>{firstName + " " + lastName}</div>
-                      {age && gender && <p>{age + ", " + gender}</p>}
-                      <p>{about}</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-5">
-                    <button
-                      className="btn btn-soft rounded-full btn-error"
-                      onClick={() => reviewRequest("rejected", request._id)}
-                    >
-                      Reject
-                    </button>
-                    <button
-                      className="btn btn-soft rounded-full btn-success"
-                      onClick={() => reviewRequest("accepted", request._id)}
-                    >
-                      Accept
-                    </button>
-                  </div>
-                </div>
-              );
-            })
-          )}
+            <p className=" text-xs sm:text-base md:text-sm text-muted-foreground mt-1">
+              Connect and chat with developers
+            </p>
+          </div>
         </div>
+        {requests.length === 0 ? (
+          <p className="text-center text-sm sm:text-base md:text-2xl">
+            No pending requests found
+          </p>
+        ) : (
+          <div className="max-w-3xl mx-auto flex flex-col gap-6">
+            {requests.length === 0 ? (
+              <p className="text-center">No pending request</p>
+            ) : (
+              requests.map((request) => {
+                const {
+                  firstName,
+                  lastName,
+                  age,
+                  photoUrl,
+                  gender,
+                  headline,
+                  about,
+                } = request.fromUserId;
+                return (
+                  <Card
+                    key={request._id}
+                    className="rounded-2xl transition hover:shadow-lg"
+                  >
+                    <CardContent className=" flex justify-between p-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className="relative">
+                            <Avatar className="w-12 h-12">
+                              {photoUrl ? (
+                                <AvatarImage src={photoUrl} />
+                              ) : (
+                                <AvatarImage src="https://www.shutterstock.com/image-vector/user-profile-icon-vector-avatar-600nw-2558760599.jpg" />
+                              )}
+                            </Avatar>
+                          </div>
+
+                          <div>
+                            <h2 className="font-semibold text-lg">
+                              {firstName + " " + lastName}
+                            </h2>
+
+                            <p className="text-sm text-muted-foreground">
+                              {headline}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* ACTION BUTTONS */}
+
+                      <div className="flex items-center gap-3">
+                        <Button
+                          onClick={() => reviewRequest("rejected", request._id)}
+                          className="flex"
+                        >
+                          Reject
+                        </Button>
+                        <Button
+                          onClick={() => reviewRequest("accepted", request._id)}
+                          variant="outline"
+                          className="flex"
+                        >
+                          Accept
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })
+            )}
+          </div>
+        )}
       </div>
     )
   );

@@ -19,7 +19,7 @@ const Body = () => {
       // console.log(profile.data);
     } catch (error) {
       if (error.status === 401) {
-        navigate("/login");
+        navigate("/");
       }
       console.log(error);
     }
